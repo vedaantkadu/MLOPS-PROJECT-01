@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PROJECT_ID = "alpine-proton-467708"
+        PROJECT_ID = "alpine-proton-467708-f6"
         SERVICE_NAME = "hotel-reservation-service"
         REGION = "us-central1"
         IMAGE = "gcr.io/${PROJECT_ID}/${SERVICE_NAME}"
@@ -12,7 +12,13 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/vedaantkadu/Mlops-Project.git'
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/vedaantkadu/MLOPS-PROJECT-01.git',
+                        credentialsId: 'github-creds'
+                    ]]
+                ])
             }
         }
 
