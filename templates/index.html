@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hotel Reservation Prediction</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>Hotel Reservation Prediction</h1>
+    <form method="POST" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Lead Time</label>
+          <input type="number" name="lead_time" required>
+        </div>
+        <div class="form-group">
+          <label>Special Requests</label>
+          <input type="number" name="no_of_special_request" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Avg Price Per Room</label>
+          <input type="number" step="0.01" name="avg_price_per_room" required>
+        </div>
+        <div class="form-group">
+          <label>Arrival Month</label>
+          <select name="arrival_month" required>
+            <option value="">--Select--</option>
+            {% set months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] %}
+            {% for i in range(1, 13) %}
+              <option value="{{ i }}">{{ months[i-1] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Arrival Date</label>
+          <select name="arrival_date" required>
+            <option value="">--Select--</option>
+            {% for i in range(1, 32) %}
+              <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Market Segment</label>
+          <select name="market_segment_type" required>
+            <option value="">--Select--</option>
+            <option value="Aviation">Aviation</option>
+            <option value="Complimentary">Complimentary</option>
+            <option value="Corporate">Corporate</option>
+            <option value="Offline">Offline</option>
+            <option value="Online">Online</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Week Nights</label>
+          <input type="number" name="no_of_week_nights" required>
+        </div>
+        <div class="form-group">
+          <label>Weekend Nights</label>
+          <input type="number" name="no_of_weekend_nights" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Meal Plan</label>
+          <select name="type_of_meal_plan" required>
+            <option value="">--Select--</option>
+            <option value="Meal Plan 1">Meal Plan 1</option>
+            <option value="Meal Plan 2">Meal Plan 2</option>
+            <option value="Meal Plan 3">Meal Plan 3</option>
+            <option value="Not Selected">Not Selected</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Room Type</label>
+          <select name="room_type_reserved" required>
+            <option value="">--Select--</option>
+            <option value="Room Type 1">Room Type 1</option>
+            <option value="Room Type 2">Room Type 2</option>
+            <option value="Room Type 3">Room Type 3</option>
+            <option value="Room Type 4">Room Type 4</option>
+            <option value="Room Type 5">Room Type 5</option>
+            <option value="Room Type 6">Room Type 6</option>
+            <option value="Room Type 7">Room Type 7</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" id="submitBtn">
+        <span id="btnText">Predict</span>
+        <div class="spinner" id="spinner"></div>
+      </button>
+
+      {% if prediction %}
+        <div class="result">{{ prediction }}</div>
+        <script>
+          document.getElementById('spinner').style.display = 'none';
+          document.getElementById('btnText').style.display = 'inline';
+        </script>
+      {% endif %}
+    </form>
+  </div>
+
+  <script>
+    function handleSubmit(e) {
+      document.getElementById('btnText').style.display = 'none';
+      document.getElementById('spinner').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
