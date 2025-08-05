@@ -1,57 +1,14 @@
-pipeline {
+pipeline{
     agent any
-
-    environment {
-        PROJECT_ID = "alpine-proton-467708-f6"
-        SERVICE_NAME = "hotel-reservation-service"
-        REGION = "us-central1"
-        IMAGE = "gcr.io/${PROJECT_ID}/${SERVICE_NAME}"
-        GOOGLE_APPLICATION_CREDENTIALS = credentials('gcp-creds')
-    }
-
-    stages {
-        stage('Checkout Code') {
-            steps {
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/vedaantkadu/MLOPS-PROJECT-01.git',
-                        credentialsId: 'github-creds'
-                    ]]
-                ])
+    
+    stages{
+        stage('Cloning Github repo to Jenkins'){
+            steps{
+                script{
+                    echo 'Cloning Github repo to Jenkins............'
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github-token', url: 'https://github.com/vedaantkadu/MLOPS-PROJECT-01.git']])
+                }
             }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh "docker build -t ${IMAGE} ."
-            }
-        }
-
-        stage('Authenticate with GCP') {
-            steps {
-                sh 'gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS'
-                sh "gcloud config set project $PROJECT_ID"
-            }
-        }
-
-        stage('Push Docker Image to GCR') {
-            steps {
-                sh "gcloud auth configure-docker"
-                sh "docker push ${IMAGE}"
-            }
-        }
-
-        stage('Deploy to Cloud Run') {
-            steps {
-                sh """
-                gcloud run deploy ${SERVICE_NAME} \
-                    --image ${IMAGE} \
-                    --platform managed \
-                    --region ${REGION} \
-                    --allow-unauthenticated
-                """
-            }
-        }
+        }       
     }
 }
