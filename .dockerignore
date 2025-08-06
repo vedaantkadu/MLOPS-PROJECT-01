@@ -1,0 +1,22 @@
+# Ignore Python and virtual env artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore Git stuff
+.git/
+.gitignore
+
+# Ignore other system files
+.DS_Store
+.idea/
+.vscode/
+*.swp
